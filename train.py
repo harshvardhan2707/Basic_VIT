@@ -114,7 +114,7 @@ if __name__ == "__main__":
                     _, predicted_labels = torch.max(outputs, 2)
                     y_true.extend(targets.cpu().numpy())
                     y_pred.extend(predicted_labels.cpu().numpy())
-                    get_metrics(y_true, y_pred)
+                get_metrics(y_true, y_pred)
             model.train()
 
 
