@@ -4,12 +4,12 @@ from torchtune.modules import RotaryPositionalEmbeddings
 
 
 class VisionTransformer(nn.Module):
-    def __init__(self, num_classes = 10, patch_shape = (8, 8), image_shape = (256, 256), embedding_dim = 256, num_heads = 8, num_layers = 6):
+    def __init__(self, num_classes = 10, channels = 3, patch_shape = (8, 8), image_shape = (256, 256), embedding_dim = 256, num_heads = 8, num_layers = 6):
         super().__init__()
         self.patch_shape = patch_shape
         self.image_shape = image_shape
         self.embedding_dim = embedding_dim
-        self.channels = 3
+        self.channels = channels
         self.num_classes = num_classes
         self.num_heads = num_heads
         self.per_head_dim = embedding_dim // num_heads
@@ -38,6 +38,7 @@ class VisionTransformer(nn.Module):
 
 
 if __name__ == "__main__":
-    Model = VisionTransformer()
-    x = torch.randn(8, 3, 256, 256)
+    Model = VisionTransformer(channels = 1)
+    x = torch.randn(8, 1, 256, 256)
     output = Model(x)
+    breakpoint()
