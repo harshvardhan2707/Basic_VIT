@@ -31,11 +31,15 @@ from PIL import Image
 |   |   |-- .
 |   |   `-- class n'''
 class ImageDataset(Dataset):
-    def __init__(self, data_path, shape, split = "train"):
+    def __init__(self, data_path, dataset_name, shape, split = "train"):
         self.data_path = data_path
         self.split = split
-        self.mean = (0.1307,)
-        self.std = (0.3081,)
+        if(dataset_name.lower() == "mnist"):
+            self.mean = (0.1307,)
+            self.std = (0.3081,)
+        elif(dataset_name.lower()=="cifar10"):
+            self.mean = (0.49139968, 0.48215827, 0.44653124)
+            self.std = (0.24703233, 0.24348505, 0.26158768)
         self.class_id_map = {}
         if(split == "train"):
             self.base_path = os.path.join(data_path, "training")
@@ -73,7 +77,7 @@ class ImageDataset(Dataset):
         target_class, source_img_name = self.idx_map[idx]
         source_img_path = os.path.join(self.base_path, target_class, source_img_name)
         target_class_id = self.class_id_map[target_class]
-        img = Image.open(source_img_path).convert("L")
+        img = Image.open(source_img_path)
         img = self.transform(img)
         return {'input_img': torch.tensor(img, dtype = torch.float32),
                 'target_class': torch.tensor(target_class_id, dtype = torch.long).unsqueeze(dim=0)}
@@ -87,7 +91,7 @@ def collate_fn(batch):
 
 if __name__ == "__main__":
     batch_size = 32
-    dataset = ImageDataset(data_path = f"{input('Enter data path: ')}", shape = (32, 32))
+    dataset = ImageDataset(data_path = f"{input('Enter data path: ')}", dataset_name = f"{input('Enter dataset name: ')}", shape = (32, 32))
     dataloader = DataLoader(dataset, batch_size = 32, shuffle = True, drop_last = True, collate_fn = collate_fn)
     for batch in dataloader:
         breakpoint()

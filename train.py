@@ -31,6 +31,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Model for training a very simple VIT")
     parser.add_argument("--project_name",type=str, required=True,  help="Name of project(this will also be the saving directory")
     parser.add_argument("--data_path", type = str, required=True, help= "Path where data is present(for structure to use, check image)")
+    parser.add_argument("--dataset_name", type = str, required=True, help="Dataset name")
     parser.add_argument("--optimizer",type=str, required=True,  help="Which optimizer to use")
     parser.add_argument("--learning_rate",type=float, required=True,  help="The learning rate to use")
     parser.add_argument("--epochs", type=int, required=True, help="Total number of epochs")
@@ -47,6 +48,7 @@ if __name__ == "__main__":
             project=args.project_name,
             config={
                 'data_path': args.data_path,
+                'dataset_name': args.dataset_name,
                 'optimizer': args.optimizer,
                 "lr": args.learning_rate,
                 "epochs": args.epochs,
@@ -60,8 +62,8 @@ if __name__ == "__main__":
     device = args.device
     epochs = args.epochs
     batch_size = args.batch_size
-    train_dataset = ImageDataset(data_path = args.data_path, shape = args.image_shape, split='train')
-    test_dataset = ImageDataset(data_path = args.data_path, shape = args.image_shape, split="test")
+    train_dataset = ImageDataset(data_path = args.data_path, dataset_name=args.dataset_name,  shape = args.image_shape, split='train')
+    test_dataset = ImageDataset(data_path = args.data_path, dataset_name=args.dataset_name, shape = args.image_shape, split="test")
     train_dataloader = DataLoader(train_dataset, batch_size = batch_size, shuffle = True, drop_last = True, collate_fn = collate_fn)
     test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle = True, drop_last = True, collate_fn = collate_fn )
     criterion = nn.CrossEntropyLoss()
